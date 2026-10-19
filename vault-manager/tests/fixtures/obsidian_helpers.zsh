@@ -1,0 +1,323 @@
+####################################################################
+# ~/utils/.obsidian_helpers      (Z-sh 5.0+)
+####################################################################
+
+### 0. Short alias for Yakitrak CLI
+alias obs="obsidian-cli"
+
+### 1. Shared configuration directory copied into every new vault
+export OBS_CFG="$HOME/utils/ObsidianConfig"
+export OBS_BIN="$HOME/utils/bin"
+
+### 2. Vault database (a tiny Z-sh script)
+VAULTS_FILE="$HOME/utils/.obsidian_vaults.zsh"
+
+# Vault Manager registry coordination v1
+# Refresh at command boundaries; refuse writes from stale registry snapshots.
+_vm_registry_helper="$HOME/Applications/Vault Manager.app/Contents/Resources/backend.py"
+_vm_python="/opt/homebrew/bin/python3"
+_oo_reload_vault_db () {
+  typeset -g _oo_registry_revision
+  _oo_registry_revision="$(/usr/bin/shasum -a 256 "$VAULTS_FILE" 2>/dev/null)"
+  _oo_registry_revision="${_oo_registry_revision%% *}"
+  unset OBS_VAULTS
+  typeset -gA OBS_VAULTS
+  [[ -f "$VAULTS_FILE" ]] && source "$VAULTS_FILE"
+}
+_oo_reload_vault_db
+_save_vault_db () {
+  if [[ ! -f "$_vm_registry_helper" ]]; then
+    echo "Vault Manager registry helper missing; registry left unchanged."
+    return 1
+  fi
+  typeset -p OBS_VAULTS | "$_vm_python" "$_vm_registry_helper" shell-save "$_oo_registry_revision" || return 1
+  _oo_reload_vault_db
+}
+
+_oo_open () {
+  _oo_reload_vault_db
+  local vname="$1"
+  local vpath="${OBS_VAULTS[$vname]}"
+
+  if [[ -z $vpath ]]; then
+    echo "Unknown vault: $vname"
+    echo "Known vaults: ${(k)OBS_VAULTS}"
+    return 1
+  fi
+
+  if [[ $(uname) == Darwin ]]; then
+    local encoded_path
+    encoded_path="$(python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$vpath")" || return 1
+    /usr/bin/open "obsidian://open?path=$encoded_path"
+  else
+    obs open --vault "$vname"
+  fi
+}
+
+_oo_format_figures () {
+  local helper="$OBS_BIN/oo_format_figures.py"
+  if [[ ! -f $helper ]]; then
+    echo "Missing helper script: $helper"
+    return 1
+  fi
+
+  python3 "$helper" "$@"
+}
+
+_oo_format_hints () {
+  local helper="$OBS_BIN/oo_format_hints.py"
+  if [[ ! -f $helper ]]; then
+    echo "Missing helper script: $helper"
+    return 1
+  fi
+
+  python3 "$helper" "$@"
+}
+
+_oo_number_figures () {
+  local helper="$OBS_BIN/oo_number_figures.py"
+  if [[ ! -f $helper ]]; then
+    echo "Missing helper script: $helper"
+    return 1
+  fi
+
+  python3 "$helper" "$@"
+}
+
+_oo_strip_code () {
+  local helper="$OBS_BIN/oo_strip_code.py"
+  if [[ ! -f $helper ]]; then
+    echo "Missing helper script: $helper"
+    return 1
+  fi
+
+  python3 "$helper" "$@"
+}
+
+_oo_date_tag () {
+  local tag
+  tag="$(date '+CODEX-INSERT-%Y%m%d-%H%M%S')"
+
+  if command -v pbcopy >/dev/null 2>&1; then
+    printf '%s' "$tag" | pbcopy
+  fi
+
+  printf '%s\n' "$tag"
+}
+
+### 3. Open vaults and dispatch Obsidian helpers
+oo () {
+  case "$1" in
+    format)
+      case "$2" in
+        figures)
+          shift 2
+          _oo_format_figures "$@"
+          ;;
+        hints)
+          shift 2
+          _oo_format_hints "$@"
+          ;;
+        *)
+          echo "Usage: oo format figures <file.md>"
+          echo "       oo format hints <file.md>"
+          return 1
+          ;;
+      esac
+      ;;
+    number)
+      case "$2" in
+        figures)
+          shift 2
+          _oo_number_figures "$@"
+          ;;
+        *)
+          echo "Usage: oo number figures <file.md>"
+          return 1
+          ;;
+      esac
+      ;;
+    strip)
+      case "$2" in
+        code)
+          shift 2
+          _oo_strip_code "$@"
+          ;;
+        *)
+          echo "Usage: oo strip code <file.md>"
+          return 1
+          ;;
+      esac
+      ;;
+    date)
+      case "$2" in
+        tag)
+          shift 2
+          _oo_date_tag "$@"
+          ;;
+        *)
+          echo "Usage: oo date tag"
+          return 1
+          ;;
+      esac
+      ;;
+    open)
+      shift
+      [[ -z $1 ]] && { echo "Usage: oo open <vault>"; return 1; }
+      _oo_open "$@"
+      ;;
+    help|-h|--help|'')
+      cat <<'EOF'
+Usage:
+  oo <vault>
+  oo open <vault>
+  oo format figures <file.md>
+  oo format hints <file.md>
+  oo number figures <file.md>
+  oo strip code <file.md>
+  oo date tag
+EOF
+      [[ -z $1 ]] && return 1
+      ;;
+    *)
+      _oo_open "$@"
+      ;;
+  esac
+}
+
+# Tab-completion for oo
+_oo_comp() {
+  _oo_reload_vault_db
+  if (( CURRENT == 2 )); then
+    compadd open format number strip date ${(k)OBS_VAULTS}
+    return
+  fi
+
+  if [[ ${words[2]} == open ]]; then
+    compadd ${(k)OBS_VAULTS}
+    return
+  fi
+
+  if [[ ${words[2]} == format ]]; then
+    if (( CURRENT == 3 )); then
+      compadd figures hints
+      return
+    fi
+
+    if [[ ${words[3]} == figures || ${words[3]} == hints ]]; then
+      _files -g '*.md'
+      return
+    fi
+  fi
+
+  if [[ ${words[2]} == number ]]; then
+    if (( CURRENT == 3 )); then
+      compadd figures
+      return
+    fi
+
+    if [[ ${words[3]} == figures ]]; then
+      _files -g '*.md'
+      return
+    fi
+  fi
+
+  if [[ ${words[2]} == strip ]]; then
+    if (( CURRENT == 3 )); then
+      compadd code
+      return
+    fi
+
+    if [[ ${words[3]} == code ]]; then
+      _files -g '*.md'
+      return
+    fi
+  fi
+
+  if [[ ${words[2]} == date ]]; then
+    if (( CURRENT == 3 )); then
+      compadd tag
+      return
+    fi
+  fi
+}
+(( $+functions[compdef] )) && compdef _oo_comp oo
+
+### 4. Create + register vault  →  ocreate <name> [base_dir]
+ocreate () {
+  _oo_reload_vault_db
+  local vname="$1"
+  local base="${2:-$HOME/ObsidianVaults}"
+  local root_cfg="$OBS_CFG/vault-root"
+  [[ -z $vname ]] && { echo "Usage: ocreate <name> [base_dir]"; return 1; }
+
+  # 4-a Refuse if name already exists in map
+  if [[ -n ${OBS_VAULTS[$vname]} ]]; then
+    echo "⚠️  Vault name '$vname' already exists:"
+    echo "   ${OBS_VAULTS[$vname]}"
+    echo "Choose a different name, or run:   orm $vname   to delete it first."
+    return 1
+  fi
+
+  local vdir="$base/$vname"
+  local odi="$vdir/.obsidian"
+
+  # 4-b Refuse if directory already exists on disk
+  if [[ -e $vdir ]]; then
+    echo "⚠️  Folder '$vdir' already exists on disk."
+    echo "Rename or remove it first, or pick a new vault name."
+    return 1
+  fi
+
+  # 4-c Create folder structure
+  mkdir -p "$odi"
+  echo "Vault folder created: $vdir"
+
+  # 4-d Copy shared config
+  rm -f "$odi/core-plugins.json" "$odi/appearance.json"
+  if [[ -d $OBS_CFG ]]; then
+    rsync -a --exclude 'vault-root' "$OBS_CFG"/ "$odi"/
+    echo "Copied common config from $OBS_CFG → $odi"
+  else
+    echo "⚠️  Shared config directory not found: $OBS_CFG"
+  fi
+
+  # 4-d.5 Copy shared vault-root files like preamble.sty
+  if [[ -d $root_cfg ]]; then
+    cp -a "$root_cfg/." "$vdir/"
+    echo "Copied shared vault-root files from $root_cfg → $vdir"
+  fi
+
+  # 4-e Register + persist
+  OBS_VAULTS[$vname]="$vdir"
+  _save_vault_db || return 1
+
+  # 4-f Launch it
+  oo "$vname"
+}
+
+### 5. Remove a vault entry  →  orm <name>
+orm () {
+  _oo_reload_vault_db
+  local vname="$1"
+  [[ -z $vname ]] && { echo "Usage: orm <name>"; return 1; }
+
+  local vpath="${OBS_VAULTS[$vname]}"
+  if [[ -z $vpath ]]; then
+    echo "No such vault entry: $vname"
+    return 1
+  fi
+
+  # 5-a Refuse if the folder still exists
+  if [[ -d $vpath ]]; then
+    echo "⚠️  Folder '$vpath' still exists on disk."
+    echo "Delete or move the folder first, then run 'orm $vname' again."
+    return 1
+  fi
+
+  # 5-b Safe removal
+  unset "OBS_VAULTS[$vname]"
+  _save_vault_db || return 1
+  echo "Removed vault entry: $vname"
+}
+####################################################################

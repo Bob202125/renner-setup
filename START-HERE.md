@@ -29,3 +29,7 @@ Package preparation and isolated creation/registration checks are performed on G
 ## Updated annotation and terminal support
 
 Study Studio main.js, styles.css and manifest.json match the deployed research-vault build at packaging time. Annotation palettes and visibility settings are included with empty question/comment arrays. The copied visibility settings hide green sticky notes and red underlines, matching Grady; Renner may choose Show all. No actual paper annotations or practice records are included. See iterm/SETUP.md for the iTerm/Oh My Zsh/Powerlevel10k setup.
+
+## Vault Manager source
+
+The graphical Vault Manager source is now included in `vault-manager/`. Read `vault-manager/SETUP-RENNER.md` to build and install it on Renner's Mac. Fetch the latest repository version; the earlier release ZIP does not include this addition.

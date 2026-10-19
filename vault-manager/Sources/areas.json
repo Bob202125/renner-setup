@@ -1,0 +1,113 @@
+{
+  "source": "curriculum/Subject Map.md and Vault and Repository Map.md, reviewed 2026-10-04. Research is user-designated. Legacy ME course vaults grouped by department; content migration remains separate. Unlisted vaults default to Other. User override: Thermodynamics belongs only to Physics. User override: single section per vault; course-specific vaults belong in Courses.",
+  "vaults": {
+    "papers_2025": [
+      "Research"
+    ],
+    "research_2025": [
+      "Research"
+    ],
+    "research": [
+      "Research"
+    ],
+    "research_vault": [
+      "Research"
+    ],
+    "results": [
+      "Research"
+    ],
+    "calc_manager_docs": [
+      "Research"
+    ],
+    "vasp": [
+      "Research"
+    ],
+    "continuum_mechanics": [
+      "Mechanical Engineering"
+    ],
+    "solid_mechanics": [
+      "Mechanical Engineering"
+    ],
+    "dynamics_and_vibrations": [
+      "Mechanical Engineering"
+    ],
+    "fluid_dynamics": [
+      "Mechanical Engineering"
+    ],
+    "thermodynamics": [
+      "Physics"
+    ],
+    "heat_transfer": [
+      "Mechanical Engineering"
+    ],
+    "transport_phenomena": [
+      "Mechanical Engineering"
+    ],
+    "materials_science": [
+      "Mechanical Engineering"
+    ],
+    "computational_mechanics": [
+      "Mechanical Engineering"
+    ],
+    "finite_elements": [
+      "Mechanical Engineering"
+    ],
+    "me412": [
+      "Courses"
+    ],
+    "me_510": [
+      "Courses"
+    ],
+    "quantum_mechanics": [
+      "Physics"
+    ],
+    "statistical_physics": [
+      "Physics"
+    ],
+    "solid_state_physics": [
+      "Physics"
+    ],
+    "electronic_structure": [
+      "Physics"
+    ],
+    "abstract_algebra": [
+      "Mathematics"
+    ],
+    "complex_analysis": [
+      "Mathematics"
+    ],
+    "real_analysis": [
+      "Mathematics"
+    ],
+    "functional_analysis": [
+      "Mathematics"
+    ],
+    "partial_differential_equations": [
+      "Mathematics"
+    ],
+    "probability_and_stochastic_processes": [
+      "Mathematics"
+    ],
+    "mathematics_1": [
+      "Mathematics"
+    ],
+    "chemistry": [
+      "Chemistry"
+    ],
+    "f-block_chemistry": [
+      "Chemistry"
+    ],
+    "chem_524": [
+      "Courses"
+    ],
+    "python": [
+      "Computer Science"
+    ],
+    "linux": [
+      "Computer Science"
+    ],
+    "current_issues_2025": [
+      "Courses"
+    ]
+  }
+}
