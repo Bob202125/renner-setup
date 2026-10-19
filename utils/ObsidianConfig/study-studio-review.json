@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "questions": [],
+  "comments": [],
+  "palette": [
+    {
+      "color": "#e2b714",
+      "darkColor": "#ffe066",
+      "meaning": "Definitions"
+    },
+    {
+      "color": "#398c50",
+      "darkColor": "#82d99b",
+      "meaning": "Examples / worked problems"
+    },
+    {
+      "color": "#2675bd",
+      "darkColor": "#8bc9ff",
+      "meaning": "Important mathematics"
+    },
+    {
+      "color": "#757575",
+      "darkColor": "#bdbdbd",
+      "meaning": "Research discrepancy or uncertainty"
+    },
+    {
+      "color": "#c94f86",
+      "darkColor": "#f3a1c5",
+      "meaning": "Main takeaway"
+    },
+    {
+      "color": "#b83b43",
+      "darkColor": "#ff6b6b",
+      "meaning": "Red"
+    },
+    {
+      "color": "#b56720",
+      "darkColor": "#ffb86b",
+      "meaning": "Not Clear / Confusion"
+    },
+    {
+      "color": "#5146a3",
+      "darkColor": "#8c8cff",
+      "meaning": ""
+    },
+    {
+      "color": "#883da8",
+      "darkColor": "#d78cf5",
+      "meaning": "Violet"
+    }
+  ],
+  "palettes": {
+    "highlight": [
+      {
+        "color": "#e2b714",
+        "darkColor": "#ffe066",
+        "meaning": "Definitions"
+      },
+      {
+        "color": "#398c50",
+        "darkColor": "#82d99b",
+        "meaning": "Examples / worked problems"
+      },
+      {
+        "color": "#2675bd",
+        "darkColor": "#8bc9ff",
+        "meaning": "Important mathematics"
+      },
+      {
+        "color": "#757575",
+        "darkColor": "#bdbdbd",
+        "meaning": "Research discrepancy or uncertainty"
+      },
+      {
+        "color": "#c94f86",
+        "darkColor": "#f3a1c5",
+        "meaning": "Main takeaway"
+      },
+      {
+        "color": "#b83b43",
+        "darkColor": "#ff6b6b",
+        "meaning": "Red"
+      },
+      {
+        "color": "#b56720",
+        "darkColor": "#ffb86b",
+        "meaning": "Not Clear / Confusion"
+      },
+      {
+        "color": "#5146a3",
+        "darkColor": "#8c8cff",
+        "meaning": ""
+      },
+      {
+        "color": "#883da8",
+        "darkColor": "#d78cf5",
+        "meaning": "Violet"
+      }
+    ],
+    "underline": [
+      {
+        "color": "#b83b43",
+        "darkColor": "#ff6b6b",
+        "meaning": "Red"
+      },
+      {
+        "color": "#b56720",
+        "darkColor": "#ffb86b",
+        "meaning": "Orange"
+      },
+      {
+        "color": "#e2b714",
+        "darkColor": "#ffe066",
+        "meaning": "Yellow"
+      },
+      {
+        "color": "#398c50",
+        "darkColor": "#82d99b",
+        "meaning": "Green"
+      },
+      {
+        "color": "#2675bd",
+        "darkColor": "#8bc9ff",
+        "meaning": "Blue"
+      },
+      {
+        "color": "#5146a3",
+        "darkColor": "#8c8cff",
+        "meaning": "Indigo"
+      },
+      {
+        "color": "#883da8",
+        "darkColor": "#d78cf5",
+        "meaning": "Violet"
+      },
+      {
+        "color": "#c94f86",
+        "darkColor": "#f3a1c5",
+        "meaning": "Pink"
+      },
+      {
+        "color": "#757575",
+        "darkColor": "#bdbdbd",
+        "meaning": "Grey"
+      }
+    ],
+    "text": [
+      {
+        "color": "#a52a34",
+        "darkColor": "#ff6b6b",
+        "meaning": "Red"
+      },
+      {
+        "color": "#995000",
+        "darkColor": "#ffb86b",
+        "meaning": "Orange"
+      },
+      {
+        "color": "#806400",
+        "darkColor": "#ffe066",
+        "meaning": "Yellow"
+      },
+      {
+        "color": "#286c3c",
+        "darkColor": "#82d99b",
+        "meaning": "Green"
+      },
+      {
+        "color": "#285c8d",
+        "darkColor": "#8bc9ff",
+        "meaning": "Important mathematical expression"
+      },
+      {
+        "color": "#5146a3",
+        "darkColor": "#8c8cff",
+        "meaning": "Indigo"
+      },
+      {
+        "color": "#883da8",
+        "darkColor": "#d78cf5",
+        "meaning": "Violet"
+      },
+      {
+        "color": "#a33668",
+        "darkColor": "#f3a1c5",
+        "meaning": "Pink"
+      },
+      {
+        "color": "#555555",
+        "darkColor": "#bdbdbd",
+        "meaning": "Grey"
+      }
+    ],
+    "sticky": [
+      {
+        "color": "#b83b43",
+        "darkColor": "#ff6b6b",
+        "meaning": "Red"
+      },
+      {
+        "color": "#b56720",
+        "darkColor": "#ffb86b",
+        "meaning": "Orange"
+      },
+      {
+        "color": "#e2b714",
+        "darkColor": "#ffe066",
+        "meaning": "Yellow"
+      },
+      {
+        "color": "#398c50",
+        "darkColor": "#82d99b",
+        "meaning": "Green"
+      },
+      {
+        "color": "#2675bd",
+        "darkColor": "#8bc9ff",
+        "meaning": "Blue"
+      },
+      {
+        "color": "#5146a3",
+        "darkColor": "#8c8cff",
+        "meaning": "Indigo"
+      },
+      {
+        "color": "#883da8",
+        "darkColor": "#d78cf5",
+        "meaning": "Violet"
+      },
+      {
+        "color": "#c94f86",
+        "darkColor": "#f3a1c5",
+        "meaning": "Pink"
+      },
+      {
+        "color": "#757575",
+        "darkColor": "#bdbdbd",
+        "meaning": "Grey"
+      }
+    ]
+  },
+  "paletteSpectrumVersion": 1
+}

@@ -1,0 +1,19 @@
+name: obs-electronic-structure
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - ipykernel
+  - cairosvg
+  - jupytext
+  - pint
+  - numpy
+  - python-kaleido
+  - pandas
+  - mendeleev
+  - matplotlib
+  - sympy
+  - scipy
+  - pillow
+  - plotly
+prefix: /opt/homebrew/Caskroom/miniforge/base/envs/obs-electronic-structure

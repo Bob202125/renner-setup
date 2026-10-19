@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "enabled": true,
+  "hiddenTypes": [
+    "[\"sticky\",\"Green\"]",
+    "[\"underline\",\"Red\"]"
+  ]
+}

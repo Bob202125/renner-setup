@@ -1,0 +1,149 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+# Load conda into this non-interactive shell
+if command -v conda >/dev/null 2>&1; then
+  eval "$(conda shell.zsh hook)"
+else
+  echo "conda not found on PATH. Make sure 'conda init zsh' ran and restart your shell." >&2
+  exit 1
+fi
+
+usage() {
+  cat <<'EOF'
+jup — tiny Jupyter/Conda helper
+
+Usage:
+  jup init [<name>] [python=X.Y[.Z]] [--display "Display Name"] [--lite] [--prefix <pfx>]
+  jup register <env> [--display "Display Name"]
+  jup list
+  jup remove <env>
+
+Notes:
+  • If <name> is omitted on 'init', the current directory name is used.
+  • Env name becomes "<prefix>-<slug(name)>", default prefix is "obs".
+  • --lite installs only ipykernel; otherwise installs a science stack (numpy, scipy, matplotlib, pandas, sympy, pint, mendeleev, jupytext, plotly, python-kaleido, cairosvg, pillow) and pip-falls back pnglatex/pyperclip.
+EOF
+}
+
+slugify() {
+  # lowercase, replace non-alnum with hyphens, trim hyphens
+  echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g'
+}
+
+CHANNELS=(-c conda-forge)
+BASE_PKGS=(ipykernel numpy scipy matplotlib pandas sympy pint mendeleev jupytext plotly python-kaleido cairosvg pillow)
+LITE_PKGS=(ipykernel)
+
+cmd="${1:-help}"
+shift || true
+case "$cmd" in
+init)
+  name="${1:-$(basename "$PWD")}"
+  [[ $# -gt 0 ]] && shift || true
+  pyver="python=3.11"
+  lite=false
+  display=""
+  prefix="obs"
+
+  while (($#)); do
+    case "$1" in
+    python=*) pyver="$1" ;;
+    --lite) lite=true ;;
+    --display)
+      shift
+      display="${1:-}"
+      ;;
+    --prefix)
+      shift
+      prefix="${1:-}"
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      usage
+      exit 1
+      ;;
+    esac
+    shift || true
+  done
+
+  slug="$(slugify "$name")"
+  env_name="${prefix}-${slug}"
+
+  echo ">> Creating env: $env_name ($pyver)"
+  conda create -n "$env_name" "$pyver" -y "${CHANNELS[@]}"
+
+  echo ">> Activating: $env_name"
+  conda activate "$env_name"
+
+  if $lite; then
+    echo ">> Installing minimal packages: ${LITE_PKGS[*]}"
+    conda install -y "${CHANNELS[@]}" "${LITE_PKGS[@]}"
+  else
+    echo ">> Installing base packages (conda-forge): ${BASE_PKGS[*]}"
+    conda install -y "${CHANNELS[@]}" "${BASE_PKGS[@]}" || true
+    # Not always on conda-forge or may have platform hiccups; pip as fallback:
+    pip install --quiet --upgrade pnglatex pyperclip || true
+  fi
+
+  disp="${display:-Python (${name})}"
+  echo ">> Registering Jupyter kernel: $disp"
+  python -m ipykernel install --user --name "$env_name" --display-name "$disp"
+
+  if [[ -w "$PWD" && ! -f environment.yml ]]; then
+    echo ">> Writing environment.yml (from-history)"
+    conda env export --from-history >environment.yml || true
+  fi
+
+  echo "✅ Done. Env: $env_name   Kernel: $disp"
+  ;;
+
+register)
+  env="${1:-}"
+  [[ -z "${env}" ]] && {
+    echo "Usage: jup register <env> [--display \"Name\"]" >&2
+    exit 1
+  }
+  shift || true
+  display=""
+  while (($#)); do
+    case "$1" in
+    --display)
+      shift
+      display="${1:-}"
+      ;;
+    *)
+      echo "Unknown arg: $1" >&2
+      usage
+      exit 1
+      ;;
+    esac
+    shift || true
+  done
+  conda activate "$env"
+  disp="${display:-Python (${env#*-})}"
+  python -m ipykernel install --user --name "$env" --display-name "$disp"
+  echo "✅ Registered kernel: $disp"
+  ;;
+
+list)
+  echo ">> Conda envs:"
+  conda env list
+  echo
+  echo ">> Jupyter kernels:"
+  jupyter kernelspec list
+  ;;
+
+remove)
+  env="${1:-}"
+  [[ -z "${env}" ]] && { echo "Usage: jup remove <env>" >&2; exit 1; }
+  # don't exit if the env doesn't exist
+  conda remove -n "$env" --all -y || true
+  jupyter kernelspec remove "$env" -y || true
+  echo "✅ Removed env and (if present) kernelspec: $env"
+;;
+
+help | *)
+  usage
+  ;;
+esac

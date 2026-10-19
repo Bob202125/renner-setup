@@ -1,0 +1,12 @@
+{
+  "pathToPandoc": "/opt/homebrew/bin/pandoc",
+  "tooltipDelay": 400,
+  "zoteroGroups": [],
+  "renderCitations": true,
+  "renderCitationsReadingMode": true,
+  "renderLinkCitations": true,
+  "pullFromZotero": false,
+  "cslStyleURL": "https://raw.githubusercontent.com/citation-style-language/styles/master/american-chemical-society.csl",
+  "enableCiteKeyCompletion": true,
+  "showCitekeyTooltips": true
+}
