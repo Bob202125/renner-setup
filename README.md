@@ -1,0 +1,1 @@
+Download Renner-Obsidian-Setup.zip from Releases. Extract it and ask Codex to read START-HERE.md before installing. Includes Obsidian setup, annotation tools/settings, utilities and iTerm configuration. No personal annotations or credentials are included.
